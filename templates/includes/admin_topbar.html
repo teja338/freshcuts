@@ -1,0 +1,19 @@
+<div class="topbar">
+
+    <div class="topbar-left">
+        <h2>Admin Dashboard</h2>
+    </div>
+
+    <div class="topbar-right">
+
+        <span>
+            Welcome,
+            {{ request.user.first_name|default:request.user.username }}
+        </span>
+
+        <i class="fas fa-user-circle"></i>
+
+    </div>
+
+</div>
+

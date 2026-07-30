@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Create Account | FreshCuts
+{% endblock %}
+
+{% block content %}
+
+<section class="py-5" style="margin-top:80px;">
+
+<div class="container">
+
+<div class="row justify-content-center align-items-center">
+
+    <!-- Left Side -->
+
+    <div class="col-lg-5 d-none d-lg-block">
+
+        <div class="text-center">
+
+            <div class="display-1 mb-3">🥩</div>
+
+            <h1 class="fw-bold text-danger">
+                Welcome to FreshCuts
+            </h1>
+
+            <p class="lead text-muted mt-3">
+                Create your account and enjoy fresh meat delivered
+                directly to your doorstep.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- Right Side -->
+
+    <div class="col-lg-5">
+
+        <div class="card border-0 shadow-lg rounded-4">
+
+            <div class="card-body p-5">
+
+                <div class="text-center mb-4">
+
+                    <h2 class="fw-bold">
+                        Create Account
+                    </h2>
+
+                    <p class="text-muted">
+                        Join FreshCuts today
+                    </p>
+
+                </div>
+
+                <form method="POST">
+
+                    {% csrf_token %}
+
+                    {% for field in form %}
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-semibold">
+                            {{ field.label }}
+                        </label>
+
+                        {{ field }}
+
+                        {% if field.errors %}
+                        <div class="text-danger small mt-1">
+                            {{ field.errors }}
+                        </div>
+                        {% endif %}
+
+                    </div>
+
+                    {% endfor %}
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger w-100 rounded-pill py-2">
+
+                        Create Account
+
+                    </button>
+
+                </form>
+
+                <hr>
+
+                <p class="text-center mb-0">
+
+                    Already have an account?
+
+                    <a href="/accounts/login/"
+                       class="fw-bold text-danger text-decoration-none">
+
+                        Login
+
+                    </a>
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

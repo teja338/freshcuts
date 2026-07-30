@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Products | FreshCuts{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="product-hero py-5">
+    <div class="container text-center">
+        <span class="badge bg-success px-3 py-2 mb-3">
+            100% Fresh & Hygienic
+        </span>
+
+        <h1 class="display-5 fw-bold">
+            Fresh Meat Delivered
+            <span class="text-success">At Your Doorstep</span>
+        </h1>
+
+        <p class="text-muted mt-3">
+            Premium quality chicken, mutton, fish and eggs sourced fresh every day.
+        </p>
+    </div>
+</section>
+
+<div class="container py-5">
+
+    <!-- Search & Filter -->
+    <form method="GET" class="card border-0 shadow-sm p-4 mb-5">
+
+        <div class="row g-3">
+
+            <div class="col-lg-5">
+
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ search }}"
+                    class="form-control"
+                    placeholder="Search products...">
+
+            </div>
+
+            <div class="col-lg-2">
+
+                <select
+                    name="category"
+                    class="form-select">
+
+                    <option value="">Category</option>
+
+                    {% for cat in categories %}
+
+                    <option
+                        value="{{ cat.id }}"
+                        {% if selected_category == cat.id|stringformat:"s" %}
+                        selected
+                        {% endif %}
+                    >
+                        {{ cat.name }}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <div class="col-lg-2">
+
+                <select
+                    name="type"
+                    class="form-select">
+
+                    <option value="">Type</option>
+
+                    <option value="Chicken">Chicken</option>
+                    <option value="Mutton">Mutton</option>
+                    <option value="Fish">Fish</option>
+                    <option value="Eggs">Eggs</option>
+
+                </select>
+
+            </div>
+
+            <div class="col-lg-2">
+
+                <select
+                    name="sort"
+                    class="form-select">
+
+                    <option value="">Sort</option>
+
+                    <option value="price_low">Price Low</option>
+                    <option value="price_high">Price High</option>
+                    <option value="newest">Newest</option>
+                    <option value="name">A-Z</option>
+
+                </select>
+
+            </div>
+
+            <div class="col-lg-1 d-grid">
+
+                <button class="btn btn-success">
+
+                    <i class="bi bi-search"></i>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+    <!-- Admin Button -->
+
+    {% if request.user.is_authenticated and request.user.role == "ADMIN" %}
+
+    <div class="text-end mb-4">
+
+        <a
+            href="{% url 'add_product' %}"
+            class="btn btn-danger">
+
+            <i class="bi bi-plus-circle"></i>
+
+            Add Product
+
+        </a>
+
+    </div>
+
+    {% endif %}
+
+    <!-- Featured Products -->
+
+    {% if featured_products %}
+
+    <div class="mb-5">
+
+        <h3 class="fw-bold mb-4">
+            Featured Products
+        </h3>
+
+        <div class="row">
+
+            {% for product in featured_products %}
+
+            <div class="col-lg-3 col-md-6 mb-4">
+
+                <div class="card border-0 shadow-sm h-100">
+
+                {% if product.image %}
+<img
+    src="{{ product.image.url }}"
+    class="card-img-top"
+    style="height:220px;object-fit:cover;"
+    alt="{{ product.name }}">
+{% else %}
+<div class="product-placeholder">
+    🥩
+</div>
+{% endif %}
+
+                    <div class="card-body">
+
+                        <h5>{{ product.name }}</h5>
+
+                        <p class="text-muted">
+                            ₹{{ product.price }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+    <!-- Products -->
+
+    <div class="row">
+
+        {% for product in products %}
+
+        <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+
+    <div class="card product-card border-0 shadow-sm h-100">
+
+        <div class="position-relative">
+
+            {% if product.image %}
+                <img src="{{ product.image.url }}"
+                     class="card-img-top product-image"
+                     alt="{{ product.name }}">
+            {% else %}
+                <div class="product-placeholder">
+                    🥩
+                </div>
+            {% endif %}
+
+            {% if product.discount_percentage %}
+                <span class="badge bg-danger position-absolute top-0 end-0 m-2">
+                    {{ product.discount_percentage }}% OFF
+                </span>
+            {% endif %}
+
+        </div>
+
+        <div class="card-body d-flex flex-column">
+
+            <small class="text-success fw-semibold">
+                {{ product.category.name }}
+            </small>
+
+            <h5 class="mt-2 fw-bold">
+                {{ product.name }}
+            </h5>
+
+            <div class="mb-2">
+                ⭐ {{ product.rating }}
+                <span class="text-muted">
+                    ({{ product.reviews }} Reviews)
+                </span>
+            </div>
+
+            <span class="badge bg-light text-dark border mb-2">
+                {{ product.weight }}
+            </span>
+
+            {% if product.in_stock %}
+                <small class="text-success mb-2">
+                    ● In Stock
+                </small>
+            {% else %}
+                <small class="text-danger mb-2">
+                    ● Out of Stock
+                </small>
+            {% endif %}
+
+            <h4 class="text-success fw-bold">
+                ₹{{ product.price }}
+            </h4>
+
+            {% if product.original_price %}
+                <small class="text-muted text-decoration-line-through">
+                    ₹{{ product.original_price }}
+                </small>
+            {% endif %}
+
+            <div class="mt-auto d-grid gap-2 pt-3">
+
+                <a href="{% url 'product_detail' product.id %}"
+                   class="btn btn-outline-success">
+                    <i class="bi bi-eye"></i>
+                    View Details
+                </a>
+<a href="{% url 'add_to_cart' product.id %}"
+   class="btn btn-success">
+    <i class="bi bi-cart-plus"></i>
+    Add to Cart
+</a>
+               
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+        {% empty %}
+
+        <div class="text-center py-5">
+
+           <div style="font-size:90px;">📦</div>
+            <h3>No Products Found</h3>
+
+            <p class="text-muted">
+
+                Try changing your search or filters.
+
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- Pagination -->
+
+    {% if page_obj.has_other_pages %}
+
+    <nav class="mt-5">
+
+        <ul class="pagination justify-content-center">
+
+            {% if page_obj.has_previous %}
+
+            <li class="page-item">
+
+                <a
+                    class="page-link"
+                    href="?page={{ page_obj.previous_page_number }}">
+
+                    Previous
+
+                </a>
+
+            </li>
+
+            {% endif %}
+
+            <li class="page-item active">
+
+                <span class="page-link">
+
+                    {{ page_obj.number }}
+
+                </span>
+
+            </li>
+
+            {% if page_obj.has_next %}
+
+            <li class="page-item">
+
+                <a
+                    class="page-link"
+                    href="?page={{ page_obj.next_page_number }}">
+
+                    Next
+
+                </a>
+
+            </li>
+
+            {% endif %}
+
+        </ul>
+
+    </nav>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

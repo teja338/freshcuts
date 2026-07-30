@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Track Order | FreshCuts{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/orders.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="orders-section py-5">
+
+<div class="container">
+
+<div class="track-card">
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+<div>
+
+<h2 class="fw-bold">
+Order #{{ order.id }}
+</h2>
+
+<p class="text-muted">
+Placed on {{ order.created_at|date:"d M Y, h:i A" }}
+</p>
+
+</div>
+
+<span class="badge
+{% if order.status == 'Delivered' %}
+bg-success
+{% elif order.status == 'Cancelled' %}
+bg-danger
+{% elif order.status == 'Out for Delivery' %}
+bg-warning text-dark
+{% elif order.status == 'Processing' %}
+bg-info text-dark
+{% else %}
+bg-primary
+{% endif %}
+">
+{{ order.status }}
+</span>
+
+</div>
+
+<hr>
+
+<div class="row">
+
+<div class="col-md-6">
+
+<h5 class="fw-bold mb-3">
+Delivery Details
+</h5>
+
+<p><strong>Phone:</strong> {{ order.phone }}</p>
+
+<p><strong>Address:</strong> {{ order.address }}</p>
+
+<p><strong>Payment:</strong> {{ order.payment_method }}</p>
+
+<p><strong>Total:</strong> ₹{{ order.total }}</p>
+
+</div>
+
+<div class="col-md-6">
+
+<h5 class="fw-bold mb-3">
+Delivery Slot
+</h5>
+
+{% if order.delivery_slot %}
+<p>{{ order.delivery_slot }}</p>
+{% else %}
+<p class="text-muted">Not Assigned</p>
+{% endif %}
+
+{% if order.worker %}
+<h5 class="fw-bold mt-4">
+Delivery Partner
+</h5>
+
+<p>{{ order.worker.get_full_name|default:order.worker.username }}</p>
+
+{% endif %}
+
+</div>
+
+</div>
+
+<hr class="my-5">
+
+<h4 class="fw-bold mb-4">
+Order Progress
+</h4>
+
+<div class="timeline">
+
+<!-- Order Placed -->
+<div class="timeline-item active">
+
+<div class="timeline-icon">
+✓
+</div>
+
+<div class="timeline-content">
+
+<h6>Order Placed</h6>
+
+<p>Your order has been placed successfully.</p>
+
+</div>
+
+</div>
+
+<!-- Accepted -->
+<div class="timeline-item {% if order.status != 'Pending' %}active{% endif %}">
+
+<div class="timeline-icon">
+📦
+</div>
+
+<div class="timeline-content">
+
+<h6>Accepted</h6>
+
+{% if order.status == "Pending" %}
+<p>Waiting for confirmation.</p>
+{% else %}
+<p>Order accepted by FreshCuts.</p>
+{% endif %}
+
+</div>
+
+</div>
+
+<!-- Preparing -->
+<div class="timeline-item {% if order.status == 'Processing' or order.status == 'Out for Delivery' or order.status == 'Delivered' %}active{% endif %}">
+
+<div class="timeline-icon">
+🥩
+</div>
+
+<div class="timeline-content">
+
+<h6>Preparing</h6>
+
+<p>Fresh meat is being prepared hygienically.</p>
+
+</div>
+
+</div>
+
+<!-- Out for Delivery -->
+<div class="timeline-item {% if order.status == 'Out for Delivery' or order.status == 'Delivered' %}active{% endif %}">
+
+<div class="timeline-icon">
+🚚
+</div>
+
+<div class="timeline-content">
+
+<h6>Out for Delivery</h6>
+
+<p>Your delivery partner is on the way.</p>
+
+</div>
+
+</div>
+
+<!-- Delivered -->
+<div class="timeline-item {% if order.status == 'Delivered' %}active{% endif %}">
+
+<div class="timeline-icon">
+🏠
+</div>
+
+<div class="timeline-content">
+
+<h6>Delivered</h6>
+
+<p>Enjoy your FreshCuts order.</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="text-center mt-5">
+
+<a href="{% url 'my_orders' %}" class="btn btn-success">
+
+← Back to My Orders
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+{% endblock %}

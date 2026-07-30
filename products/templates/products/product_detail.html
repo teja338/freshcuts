@@ -1,0 +1,284 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+{{ product.name }} | FreshCuts
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/product_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<section class="py-5">
+
+<div class="container">
+
+<div class="row g-5">
+
+<!-- Product Image -->
+
+<div class="col-lg-6">
+
+<div class="product-image-card">
+
+{% if product.image %}
+
+<img
+src="{{ product.image.url }}"
+class="img-fluid rounded-4 main-image"
+alt="{{ product.name }}">
+
+{% else %}
+
+<img
+src="{% static 'images/product-placeholder.png' %}"
+class="img-fluid rounded-4 main-image"
+alt="{{ product.name }}">
+
+{% endif %}
+
+{% if product.discount_percentage %}
+
+<span class="discount-badge">
+{{ product.discount_percentage }}% OFF
+</span>
+
+{% endif %}
+
+</div>
+
+</div>
+
+<!-- Product Details -->
+
+<div class="col-lg-6">
+
+<p class="text-success fw-semibold">
+{{ product.category.name }}
+</p>
+
+<h1 class="fw-bold mb-3">
+{{ product.name }}
+</h1>
+
+<div class="mb-3">
+
+<span class="rating">
+★★★★★
+</span>
+
+<span class="text-muted">
+{{ product.rating }}
+({{ product.reviews }} Reviews)
+</span>
+
+</div>
+
+<p class="text-muted">
+{{ product.description }}
+</p>
+
+<div class="my-4">
+
+{% if product.original_price %}
+
+<h6>
+<del>₹{{ product.original_price }}</del>
+</h6>
+
+{% endif %}
+
+<h2 class="text-success fw-bold">
+₹{{ product.price }}
+</h2>
+
+</div>
+
+<div class="mb-4">
+
+<span class="badge bg-light text-dark">
+{{ product.weight }}
+</span>
+
+{% if product.in_stock %}
+
+<span class="badge bg-success">
+In Stock
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+Out of Stock
+</span>
+
+{% endif %}
+
+</div>
+
+<!-- Quantity -->
+
+<div class="mb-4">
+
+<label class="fw-semibold">
+Quantity
+</label>
+
+<div class="quantity-box mt-2">
+
+<button
+type="button"
+class="btn btn-outline-secondary">
+-
+</button>
+
+<input
+type="text"
+value="1"
+class="form-control text-center"
+readonly>
+
+<button
+type="button"
+class="btn btn-outline-secondary">
++
+</button>
+
+</div>
+
+</div>
+
+<!-- Buttons -->
+
+<div class="d-grid gap-3">
+
+{% if product.in_stock %}
+
+<a
+href="{% url 'add_to_cart' product.id %}"
+class="btn btn-success btn-lg">
+
+<i class="bi bi-cart-plus"></i>
+
+Add to Cart
+
+</a>
+
+{% else %}
+
+<button
+class="btn btn-secondary btn-lg"
+disabled>
+
+Out of Stock
+
+</button>
+
+{% endif %}
+
+<button
+class="btn btn-outline-danger btn-lg">
+
+<i class="bi bi-heart"></i>
+
+Add to Wishlist
+
+</button>
+
+<a
+href="{% url 'products' %}"
+class="btn btn-outline-success btn-lg">
+
+<i class="bi bi-arrow-left"></i>
+
+Back to Products
+
+</a>
+
+</div>
+
+<!-- Delivery -->
+
+<div class="delivery-card mt-5">
+
+<h5>Delivery Information</h5>
+
+<ul>
+
+<li>🚚 Delivery within 90 Minutes</li>
+<li>❄️ Hygienically Packed</li>
+<li>🥩 Freshly Cut Every Day</li>
+<li>💳 Cash on Delivery Available</li>
+<li>🔁 Easy Returns for Damaged Orders</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Related Products -->
+
+{% if related_products %}
+
+<hr class="my-5">
+
+<h2 class="fw-bold mb-4">
+Related Products
+</h2>
+
+<div class="row">
+
+{% for item in related_products %}
+
+<div class="col-lg-3 col-md-6 mb-4">
+
+<div class="card product-card border-0 shadow-sm">
+
+{% if item.image %}
+
+<img
+src="{{ item.image.url }}"
+class="card-img-top"
+style="height:220px;object-fit:cover;"
+alt="{{ item.name }}">
+
+{% endif %}
+
+<div class="card-body">
+
+<h5>{{ item.name }}</h5>
+
+<p class="text-success">
+₹{{ item.price }}
+</p>
+
+<a
+href="{% url 'product_detail' item.id %}"
+class="btn btn-outline-success w-100">
+
+View Product
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endif %}
+
+</div>
+
+</section>
+
+{% endblock %}

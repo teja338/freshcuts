@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Add Product
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-8">
+
+<div class="card shadow-lg border-0">
+
+<div class="card-header bg-danger text-white">
+
+<h3>
+
+Add New Product
+
+</h3>
+
+</div>
+
+<div class="card-body">
+
+<form method="POST"
+      enctype="multipart/form-data">
+
+{% csrf_token %}
+
+{{ form.as_p }}
+
+<button class="btn btn-danger">
+
+Save Product
+
+</button>
+
+<a href="{% url 'products' %}"
+class="btn btn-secondary">
+
+Cancel
+
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}
