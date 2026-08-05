@@ -12,10 +12,6 @@ from .agent import execute_tool
 
 load_dotenv()
 
-client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY")
-)
-
 
 # -----------------------------------
 # Build Prompt
@@ -25,7 +21,6 @@ def build_prompt(history, user_message):
 
     tool_result = execute_tool(user_message)
 
-    # Convert tool output into readable text
     if tool_result:
 
         product_data = ""
@@ -75,12 +70,14 @@ CHAT HISTORY
 
 def ask_ai(history, user_message):
 
+    # Create Gemini client only when needed
+    client = genai.Client(
+        api_key=os.getenv("GEMINI_API_KEY")
+    )
+
     history.append({
-
         "role": "user",
-
         "message": user_message
-
     })
 
     prompt = build_prompt(history, user_message)
@@ -88,28 +85,24 @@ def ask_ai(history, user_message):
     try:
 
         response = client.models.generate_content(
-
-            model="gemini-flash-latest",
-
+            model="gemini-2.5-flash",
             contents=prompt
-
         )
 
         answer = response.text
 
     except Exception as e:
 
-      answer = (
-    "😔 Sorry, I'm temporarily unavailable because the AI service "
-    "has reached its request limit. Please try again in a few minutes."
-)
+        print("Gemini Error:", e)
+
+        answer = (
+            "😔 Sorry, I'm temporarily unavailable because the AI service "
+            "is currently unavailable. Please try again in a few minutes."
+        )
 
     history.append({
-
         "role": "assistant",
-
         "message": answer
-
     })
 
     return answer, history
