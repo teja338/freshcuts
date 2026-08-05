@@ -6,10 +6,6 @@ from google import genai
 from .prompts import SYSTEM_PROMPT
 from .agent import execute_tool
 
-# -----------------------------------
-# Load Environment
-# -----------------------------------
-
 load_dotenv()
 
 
@@ -21,7 +17,8 @@ def build_prompt(history, user_message):
 
     tool_result = execute_tool(user_message)
 
-    if tool_result:
+    # If tool returned product list
+    if isinstance(tool_result, list):
 
         product_data = ""
 
@@ -35,6 +32,12 @@ Description  : {product['description']}
 ----------------------------------
 """
 
+    # If tool returned normal text
+    elif tool_result:
+
+        product_data = str(tool_result)
+
+    # If no tool used
     else:
 
         product_data = "No product search required."
@@ -70,7 +73,6 @@ CHAT HISTORY
 
 def ask_ai(history, user_message):
 
-    # Create Gemini client only when needed
     client = genai.Client(
         api_key=os.getenv("GEMINI_API_KEY")
     )

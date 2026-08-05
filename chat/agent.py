@@ -13,7 +13,7 @@ You are FreshCuts AI Planner.
 
 Your only job is deciding which tool to use.
 
-Available tools
+Available tools:
 
 1. search_products
 2. recipe_tool
@@ -21,19 +21,22 @@ Available tools
 4. delivery_tool
 5. order_tool
 
-Reply ONLY JSON.
+Rules:
+- Reply ONLY valid JSON.
+- Do not add markdown.
+- Do not explain anything.
 
-Example
+Example:
 
 {
-  "tool":"search_products",
-  "query":"chicken"
+  "tool": "search_products",
+  "query": "chicken"
 }
 
-If no tool required
+If no tool is required:
 
 {
-  "tool":"none"
+  "tool": "none"
 }
 """
 
@@ -50,18 +53,34 @@ def choose_tool(message):
     )
 
     text = response.text.strip()
-    text = text.replace("```json", "")
-    text = text.replace("```", "")
 
-    return json.loads(text)
+    text = (
+        text.replace("```json", "")
+            .replace("```", "")
+            .strip()
+    )
+
+    try:
+        return json.loads(text)
+
+    except json.JSONDecodeError:
+        print("Invalid JSON returned by Gemini:")
+        print(text)
+
+        return {
+            "tool": "none"
+        }
 
 
 def execute_tool(message):
 
     try:
         plan = choose_tool(message)
+
     except Exception as e:
+
         print("Tool selection error:", e)
+
         return None
 
     tool_name = plan.get("tool")
@@ -76,4 +95,9 @@ def execute_tool(message):
 
     query = plan.get("query", message)
 
-    return tool(query)
+    try:
+        return tool(query)
+
+    except Exception as e:
+        print("Tool execution error:", e)
+        return None

@@ -5,35 +5,24 @@ from products.models import Product
 # -----------------------------------------
 # Product Search Tool
 # -----------------------------------------
-
 def search_products(query):
 
     products = Product.objects.filter(
-
         Q(name__icontains=query) |
         Q(description__icontains=query)
-
     )[:10]
 
     if not products.exists():
+        return []
 
-        return None
-
-    result = ""
-
-    for product in products:
-
-        result += f"""
-Product Name : {product.name}
-Price : ₹{product.price}
-Description : {product.description}
-
-----------------------------------
-"""
-
-    return result
-
-
+    return [
+        {
+            "name": p.name,
+            "price": p.price,
+            "description": p.description,
+        }
+        for p in products
+    ]
 # -----------------------------------------
 # Recipe Tool
 # -----------------------------------------
@@ -63,7 +52,7 @@ Generate:
 # Offers Tool
 # -----------------------------------------
 
-def offers_tool():
+def offers_tool(query=None):
 
     return """
 Current FreshCuts Offers
