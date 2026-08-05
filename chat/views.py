@@ -28,8 +28,6 @@ def chat_api(request):
     except Exception as e:
         traceback.print_exc()
         return JsonResponse(
-            {
-                "reply": str(e)
-            },
+            {"reply": str(e)},
             status=500
         )
