@@ -45,7 +45,7 @@ def choose_tool(message):
     )
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-2.5-flash-lite"
         contents=f"{SYSTEM}\n\nUser:\n{message}"
     )
 
