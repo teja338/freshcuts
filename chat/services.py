@@ -87,7 +87,7 @@ def ask_ai(history, user_message):
     try:
 
         response = client.models.generate_content(
-            model="gemini-2.5-flash-lite",
+           model="gemini-flash-latest",
             contents=prompt
         )
 
