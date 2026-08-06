@@ -32,5 +32,4 @@ urlpatterns = [
         views.delete_product,
         name="delete_product",
     ),
-
 ]

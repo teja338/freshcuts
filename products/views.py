@@ -11,7 +11,6 @@ from .forms import ProductForm
 # --------------------------
 # Product List
 # --------------------------
-
 def product_list(request):
 
     products = Product.objects.filter(
@@ -23,22 +22,26 @@ def product_list(request):
     product_type = request.GET.get("type", "")
     sort = request.GET.get("sort", "")
 
+    # Search
     if search:
         products = products.filter(
             Q(name__icontains=search) |
             Q(description__icontains=search)
         )
 
+    # Filter from Home Page Categories
     if category:
         products = products.filter(
-            category__id=category
+            product_type=category
         )
 
+    # Filter from Product Type Dropdown
     if product_type:
         products = products.filter(
             product_type=product_type
         )
 
+    # Sorting
     if sort == "price_low":
         products = products.order_by("price")
 
@@ -51,6 +54,7 @@ def product_list(request):
     elif sort == "name":
         products = products.order_by("name")
 
+    # Pagination
     paginator = Paginator(products, 8)
 
     page_number = request.GET.get("page")
@@ -66,7 +70,7 @@ def product_list(request):
             is_featured=True
         )[:4],
         "search": search,
-            "selected_category": category,
+        "selected_category": category,
         "selected_type": product_type,
         "selected_sort": sort,
     }
@@ -76,7 +80,6 @@ def product_list(request):
         "products/products.html",
         context
     )
-
 
 # --------------------------
 # Product Detail

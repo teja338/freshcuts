@@ -119,45 +119,49 @@ Out of Stock
 </div>
 
 <!-- Quantity -->
+<!-- Quantity -->
 
 <div class="mb-4">
 
-<label class="fw-semibold">
-Quantity
-</label>
+    <label class="fw-semibold">
+        Quantity
+    </label>
 
-<div class="quantity-box mt-2">
+    <div class="quantity-box mt-2 d-flex align-items-center">
 
-<button
-type="button"
-class="btn btn-outline-secondary">
--
-</button>
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            onclick="decreaseQty()">
+            -
+        </button>
 
-<input
-type="text"
-value="1"
-class="form-control text-center"
-readonly>
+        <input
+            id="quantity"
+            type="text"
+            value="1"
+            class="form-control text-center mx-2"
+            readonly
+            style="max-width:70px;">
 
-<button
-type="button"
-class="btn btn-outline-secondary">
-+
-</button>
+        <button
+            type="button"
+            class="btn btn-outline-secondary"
+            onclick="increaseQty()">
+            +
+        </button>
+
+    </div>
 
 </div>
-
-</div>
-
 <!-- Buttons -->
 
 <div class="d-grid gap-3">
 
 {% if product.in_stock %}
-
 <a
-href="{% url 'add_to_cart' product.id %}"
+id="cartBtn"
+href="{% url 'add_to_cart' product.id %}?qty=1"
 class="btn btn-success btn-lg">
 
 <i class="bi bi-cart-plus"></i>
@@ -280,5 +284,5 @@ View Product
 </div>
 
 </section>
-
+<script src="{% static 'js/products.js' %}"></script>
 {% endblock %}
