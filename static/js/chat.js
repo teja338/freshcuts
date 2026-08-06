@@ -165,8 +165,7 @@ async function sendMessage() {
         hideTyping();
 
         addMessage(
-            "⚠️ Server Error. Please try again.",
-            "bot"
+            "⚠️ Sorry! The AI request limit has been exceeded. Please try again after a few minutes."
         );
 
         console.error(error);
